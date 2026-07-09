@@ -1,0 +1,98 @@
+ARCHIVIO DIGITALE CON FOTO, VIDEO
+lib/
+│
+├── main.dart                 # 🏁 Il punto di ingresso dell'app (Insieme)
+│
+├── models/                   # 🧠 I Modelli dei Dati (Sviluppatore B)
+│   └── media_model.dart      # Contiene le classi "Album" e "MediaItem"
+│
+├── data/                     # 📝 Gestione Dati e Database (Sviluppatore B)
+│   └── archivio_dati.dart    # Liste globali o funzioni di salvataggio/CRUD
+│
+├── services/                 # 🔌 Gestione Hardware e File (Sviluppatore C)
+│   ├── camera_service.dart   # Funzioni per image_picker (Scatta foto/video)
+│   └── storage_service.dart  # Funzioni per path_provider (Salva/Elimina file fisici)
+│
+└── screens/                  # 🎨 Le Schermate dell'Interfaccia (Sviluppatore A)
+    ├── home_screen.dart      # Lista degli Album (Crea, Modifica, Elimina Album)
+    ├── album_detail_screen.dart # Griglia interna all'album (Foto e Video)
+    ├── photo_view_screen.dart   # Visualizzatore foto a schermo intero (con Zoom)
+    └── video_player_screen.dart # Player video funzionante
+
+FEATURE AGGIUNTIVE
+1. Password o Impronta Digitale per gli Album Segreti (l'utente può contrassegnare un album come privato. Per aprirlo: pin o impronta digitale/FaceID del telefono). Complessità: altà
+2. Cestino Intelligente" con Auto-Eliminazione
+3. Tag e ricerca intelligente(ogni foto può avere un tag. Ad esempio #famiglia, #marel, #lavoro). Complessità: bassa
+
+
+FLUSSO DI LAVORO 
+
+main (Stabile) ─────────────────────────► [Unione del codice finale]
+  │
+  ├──► feature-ui (Sviluppatore C) ─────────────────► (Lavori sulla grafica delle schermate)
+  │
+  ├──► feature-data (Sviluppatore B) ───► (Lavori su liste, CRUD e logica dati)
+  │
+  └──► feature-hardware (Io) ──► (Lavori su fotocamera e storage)
+
+SCARICARE IL PROGETTO
+git clone url_repo_github
+flutter pub get(per fare in modo che il file pubspec.yaml non venga ignorato) 
+
+
+COMANDI UTILI 
+Creare il proprio branch dopo aver scaricato lo scheletro dal main: git checkout -b feature-ui
+
+2. Salvare il lavoro: git add., git commit -m "msg"
+
+3. Pubblicare il branch su GitHub: git push origin feature-ui
+
+DIVISIONE DELLE CARTELLE (in realtà è da decidere ancora)
+
+IO: screens/
+Sviluppatore B: models/ e data/
+Sviluppatore C: services/
+
+Tutti e tre possono lavorare senza dover aspettare gli altri.
+
+
+La Sincronizzazione Quotidiana (Zero Conflitti)
+Da fare quando uno sviluppatore finisce una parte e la unisce nel main 
+git checkout main
+git pull origin main       # Scarichi le novità del collega sul PC
+git checkout tuo-branch   # Torni nel tuo spazio (es: feature-ui)
+git merge main             # Assorbi le novità del collega nel tuo codice
+
+
+MAI USARE: git push origin main --force (o -f)
+
+git merge --abort: annulla tutto 
+
+
+ROUTINE DEL SINGOLO SVILUPPATORE
+Allineamento(ognuno deve sapere che cosa hanno fatto gli altri)
+     - git checkout main
+     - git pull origin main
+     - git checkout my-branch
+     - git merge main (lo si fa solo se in una cartella sono stati creati e scritti con successo i file di una data cartella)
+
+2. Durante la giornata
+   - Ogni volta che si completa una piccola cosa(es. bottone, navbar)
+   - git add . , git commit -m "msg"
+   FARE PICCOLI COMMIT IN MODO CHE SIA PIU' FACILE TORNARE INDIETRO IN CASO DI INTOPPI
+
+3. Fine della giornata
+   - git push origin my-branch (si inviano i commit giornalieri sul branch)
+   Se si finisce l'intera cartella assegnata(ad esempio models), la logica   funziona e i test funzionano. 
+   Si apre la pull request e si clicca su compare e pull request.
+   Controllo da parte di tutti e poi si fa il merge
+   Se in una giornata non si riesce a fare tutto (comandi git):
+   - git add .
+   - git commit -m "msg"
+   - git push origin my-branch
+
+I merge si fanno alla fine (punto da chiarire).
+Primo merge: feature-data
+Secondo merge: feature-ui
+Terzo merge: feature-hardware
+

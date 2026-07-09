@@ -1,0 +1,27 @@
+FEATURE-UI
+  1. Scaffafold: struttura base di ogni schermata
+  2. Column e Row
+  3. Container e Padding: margini, distanza tra elementi, colori di sfondo
+  4. Expanded/Flexible: gestione dello spazio
+  
+  Nei widget:
+	- Text
+	- ElevatedButton o IconButton
+	- GridView.builder
+	- ListView.builder
+	- Card
+	- Navigator.push (fa in modo che se l'utente clicca su un album, la schermata cambia)
+
+FEATURE-DATA
+  1. Le classi 
+  2. Le liste
+  3. Database leggero: sqflite, operazioni CRUD asincrone(async/await)(salva album, leggi album, elimina album)
+  4. Future per le operazioni CRUD
+
+FEATURE-HARDWARE
+Package esterni(plugin):
+	- image_picker: apre la fotocamera del telefono, permette di scattare e restituisce il file della foto appena fatta
+
+	- path_provider: necessario per capire dove salvare fisicamente il file della foto nella memoria del telefono (es. cartella documents dell'app) in 	                 modo che non si cancelli
+
+OGNI CASO TUTTI DEVONO SAPERE DI ASYNC/AWAIT

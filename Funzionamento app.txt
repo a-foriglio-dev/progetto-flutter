@@ -1,0 +1,40 @@
+Scenario 1: L'apertura e il Tab "Libreria" (Il primo avvio)
+1. Sullo schermo compare la Navbar in basso con i 4 elementi. Di default si illumina la prima icona: Libreria.
+
+2. Dietro le quinte (db): Esegue la query: SELECT * FROM Foto WHERE is_deleted = 0. Visto che l'app è nuova, il DB restituisce una lista vuota.
+
+3. UI: La schermata è bianca, ma al centro mostra una bella scritta pulita: Scatta la prima foto
+
+Scenario 2: L'azione principale (Il tasto Scatta)
+
+Tu premi il tasto [ 📸 Scatta ] al centro della Navbar.
+
+
+2. Entra in gioco l'hardware: si apre la fotocamera del telefono e si preme ok per confermare la foto
+
+3. Salvataggio del file: la fotocamera si chiude. Image_picker dà un file temporaneo. LO si prende e lo si copia nella cartella sicura dell'app e lo rinomina (es. foto_1.jpg). Si prende questo percorso assoluto e lo si mette nel db
+
+4. Salvataggio nel db: si prende il path e si fa la query: INSERT INTO Foto (path_file, album_id, is_deleted) VALUES ('/cartella_app/foto_1.jpg', NULL, 0)
+
+5. Aggiornamento grafico(ui): IL gridView.builder si ricarica all'istante e compare la prima foto.
+
+
+Scenario 3: Organizzare in album
+
+1. Ci si sposta sul Tab "Album" (Seconda icona della Navbar): La schermata è vuota.
+
+2. Si crea un faldone: Premi il tasto [ ➕ Nuovo Album ]. Appare il pop-up, scrivi "Università" e premi Salva. B esegue la query INSERT INTO Album (nome) VALUES ('Università'). La pagina si aggiorna e vedi un bel rettangolo con Università(0 foto)
+
+3. Si entra nell'album. Si clicca sul rettangolo e viene mostrata la foto. Sopra c'è il pulsante per tornare indietro. IN basso opzione preferiti, cestino, info per mostrare nome foto, data e ora dello scatto.
+
+Scenario 4: Il Cestino
+
+1. Eliminazione foto: dalla navbar in basso che appare quando si clicca una foto. 
+
+2. La foto non viene cancellata dal telefono. Possibile query: UPDATE Foto SET is_deleted = 1 WHERE id = X.
+
+3. UI: La foto sparisce immediatamente dal tab Libreria (perché la query della libreria mostra solo quelle con is_deleted = 0).
+
+4. Se si clicca sul cestino(icona in basso nella navbar): appaiono le foto 
+
+5. In alto: opzione per tornare indietro e in basso due opzioni. Ripristino: ripristina la foto e torna in galleria(is_deleted = 0). Elimina definitivamente: la foto viene eliminata in modo definitivo dal db.
