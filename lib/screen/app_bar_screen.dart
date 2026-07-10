@@ -1,18 +1,13 @@
-// Importa i widget Material: AppBar, PopMenuButton, Text, Icon, Size
 import 'package:flutter/material.dart';
 
-/// AppBar della schermata principale: titolo centrato e, al posto del
-/// leading di default, il menu dei filtri (icona a tre linee).
-/// implements PreferredSizeWidget: serve dato che si usa class EchoAppBar al posto di appBar
-/// Questo perchè deve sapere quanto spazio verticale dedicare alla barra superiore
+/// AppBar della schermata principale di Echo.
+/// Disposizione: Logo aziendale a sinistra, titolo centrato, menu filtri a destra.
 class EchoAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool hasBookmarkedEntries;
-  // OnFilterSelected è una callback di tipo ValueChanged<String>. 
-  // Funzione che riceve una stringa voidFunction(String) che viene passata dal genitore journal_screen.dart
+  
+  /// Callback per notificare il widget padre (journal_screen) sul filtro selezionato.
   final ValueChanged<String> onFilterSelected;
 
-  // const: se non cambia Flutter può riusare la stessa istanza senza ricrearla. 
-  // super.key passa la chiave opzionale al widget 
   const EchoAppBar({
     super.key,
     required this.hasBookmarkedEntries,
@@ -22,6 +17,20 @@ class EchoAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      // 1. LOGO DA ASSETS A SINISTRA
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: Image.asset(
+            'assets/logo.png',
+            fit: BoxFit.contain, // Mantiene le proporzioni originali del logo senza tagliarlo
+          ),
+        ),
+      ),
+      leadingWidth: 56, // Spazio orizzontale riservato al logo
+
+      // 2. TITOLO DELL'APP AL CENTRO
       title: const Text(
         'Echo - I miei Diari',
         style: TextStyle(fontWeight: FontWeight.w300),
@@ -29,39 +38,32 @@ class EchoAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      // Icona filtro tre linee 
-      // PopupMenuButton chiama onfFilterSelected passandogli il valore scelto
-      leading: PopupMenuButton<String>(
-        icon: const Icon(
-          Icons.filter_list,
-        ), // Icona con tre linee per il filtro
-        
-        onSelected: onFilterSelected,
 
-        // ItemBuilder definisce quali voci devono comparire nel menu quando viene aperto
-        itemBuilder: (BuildContext context) => [
-        
-        
-          const PopupMenuItem<String>(
-            value: 'all',
-            child: Text('Tutti i diari'),
+      // 3. MENU DEI FILTRI (TRE LINEE) A DESTRA
+      actions: [
+        PopupMenuButton<String>(
+          icon: const Icon(
+            Icons.filter_list,
           ),
-          // Mostra l'opzione dei segnalibri solo se presente almeno un diario contrassegnato
-          if (hasBookmarkedEntries)
+          onSelected: onFilterSelected,
+          itemBuilder: (BuildContext context) => [
             const PopupMenuItem<String>(
-              value: 'bookmarked',
-              child: Text('Con segnalibro'),
+              value: 'all',
+              child: Text('Tutti i diari'),
             ),
-        ],
-      ),
+            // Mostra l'opzione dei segnalibri solo se ce n'è almeno uno attivo
+            if (hasBookmarkedEntries)
+              const PopupMenuItem<String>(
+                value: 'bookmarked',
+                child: Text('Con segnalibro'),
+              ),
+          ],
+        ),
+        const SizedBox(width: 8.0), // Distanza di sicurezza dal bordo destro dello schermo
+      ],
     );
   }
 
-  // Richiesto da PreferredSizeWidget: dice a Scaffold quanto deve essere
-  // alta questa AppBar (l'altezza standard di una AppBar Material).
-  // Ciò che soddisfa il contratto PreferredSizeWidget
-  // Size.fromHeight(...): indica larghezza illimitata, alezza fissa pari a KToolHeight: 56 logical pixel
-  // In questo modo lo scaffold di journal_screen.dart
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
