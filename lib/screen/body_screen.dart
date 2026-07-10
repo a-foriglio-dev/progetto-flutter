@@ -90,10 +90,10 @@ class EchoBody extends StatelessWidget {
                   if (entry.isPrivate)
                     const Padding(
                       padding: EdgeInsets.only(right: 8.0),
-                      child: Icon(Icons.lock, color: Colors.white70, size: 20),
+                      child: Icon(Icons.lock, color: Colors.white, size: 20),
                     ),
                   if (entry.isBookmarked)
-                    const Icon(Icons.bookmark, color: Colors.amber),
+                    const Icon(Icons.bookmark, color: Colors.black),
                   PopupMenuButton<String>(
                     onSelected: (value) {
                       if (value == 'bookmark') {
