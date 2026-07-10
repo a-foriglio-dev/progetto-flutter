@@ -10,7 +10,6 @@ import 'config/emotional_dictionary.dart';
 /// Nota: la gestione del testo vuoto (reset allo stato neutro) resta
 /// a carico del chiamante, perché è una scelta di UI e non di analisi.
 
-
 EmotionalState? analyzeText(String text) {
   final lowerText = text.toLowerCase();
 

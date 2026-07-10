@@ -11,7 +11,6 @@ class EchoBody extends StatelessWidget {
   final void Function(JournalEntry entry) onToggleBookmark;
   final void Function(JournalEntry entry) onDelete;
   final void Function(JournalEntry entry) onTapEntry;
-  // 🆕 AGGIUNTA QUESTA RIGA: serve a ricevere la funzione per la privacy
   final void Function(JournalEntry entry) onTogglePrivacy;
 
   const EchoBody({
@@ -21,7 +20,7 @@ class EchoBody extends StatelessWidget {
     required this.onToggleBookmark,
     required this.onDelete,
     required this.onTapEntry,
-    required this.onTogglePrivacy, // 🆕 AGGIUNTA QUESTA RIGA
+    required this.onTogglePrivacy,
   });
 
   @override
@@ -43,6 +42,19 @@ class EchoBody extends StatelessWidget {
       itemBuilder: (context, index) {
         final entry = displayedEntries[index];
         
+        // 🆕 METODO 1: Recuperiamo il colore principale della card per calcolare il contrasto
+        final Color cardPrimaryColor = entry.emotion.gradientColors.isNotEmpty 
+            ? entry.emotion.gradientColors.first 
+            : Colors.grey;
+
+        // 🆕 Determina se lo sfondo locale sotto le icone è chiaro o scuro
+        final bool isDarkBackground = ThemeData.estimateBrightnessForColor(cardPrimaryColor) == Brightness.dark;
+
+        // 🆕 Colore dinamico armonizzato per le icone del segnalibro e del lucchetto
+        final Color dynamicIconColor = isDarkBackground 
+            ? Colors.white.withOpacity(0.9)  // Bianco morbido su sfondi scuri (Ansia, Tristezza)
+            : Colors.black.withOpacity(0.75); // Nero fumo su sfondi chiari (Gioia, Serenità)
+
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 8.0),
           shape: RoundedRectangleBorder(
@@ -73,7 +85,7 @@ class EchoBody extends StatelessWidget {
               subtitle: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  // 🆕 Nascondiamo l'anteprima del testo se il diario è privato
+                  // Nascondiamo l'anteprima del testo se il diario è privato
                   entry.isPrivate 
                       ? 'Contenuto protetto da PIN 🔒' 
                       : entry.content,
@@ -86,22 +98,25 @@ class EchoBody extends StatelessWidget {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // 🆕 Mostra un lucchetto se il diario è privato
+                  // 🆕 Mostra il lucchetto adattato cromaticamente allo sfondo
                   if (entry.isPrivate)
-                    const Padding(
-                      padding: EdgeInsets.only(right: 8.0),
-                      child: Icon(Icons.lock, color: Colors.white, size: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Icon(Icons.lock, color: dynamicIconColor, size: 20),
                     ),
+                  // 🆕 Mostra il segnalibro adattato cromaticamente allo sfondo
                   if (entry.isBookmarked)
-                    const Icon(Icons.bookmark, color: Colors.black),
+                    Icon(Icons.bookmark, color: dynamicIconColor, size: 24),
+                    
                   PopupMenuButton<String>(
+                    // Ingrandito leggermente il pulsante menu per equilibrarlo con le icone
+                    iconColor: dynamicIconColor,
                     onSelected: (value) {
                       if (value == 'bookmark') {
                         onToggleBookmark(entry);
                       } else if (value == 'delete') {
                         onDelete(entry);
                       } else if (value == 'privacy') {
-                        //  Attiva la callback quando l'utente preme sul menu
                         onTogglePrivacy(entry);
                       }
                     },
@@ -114,7 +129,6 @@ class EchoBody extends StatelessWidget {
                               : 'Aggiungi ai segnalibri',
                         ),
                       ),
-                      //  Nuova opzione nel menu a tendina
                       PopupMenuItem(
                         value: 'privacy',
                         child: Text(
