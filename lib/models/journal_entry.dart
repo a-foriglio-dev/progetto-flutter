@@ -22,6 +22,7 @@ class JournalEntry {
   final DateTime date;
   final EmotionalState emotion;
   bool isBookmarked;
+  bool isPrivate;
 
   JournalEntry({
     required this.id,
@@ -30,5 +31,6 @@ class JournalEntry {
     required this.date,
     required this.emotion,
     this.isBookmarked = false,
+    this.isPrivate = false,
   });
 }

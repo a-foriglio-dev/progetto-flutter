@@ -5,6 +5,7 @@ import 'app_bar_screen.dart';
 import 'body_screen.dart';
 import 'bottom_layout.dart';
 import 'editor_screen.dart';
+import '../manager/pin_manager.dart';
 
 /// Schermata Principale: Lista dei Diari con Filtri Avanzati.
 ///
@@ -19,6 +20,9 @@ class EchoJournalScreen extends StatefulWidget {
 }
 
 class _JournalState extends State<EchoJournalScreen> {
+  
+  String? _appPin;
+  
   // Lista simulata dei diari salvati
   final List<JournalEntry> _entries = [
     JournalEntry(
@@ -28,6 +32,7 @@ class _JournalState extends State<EchoJournalScreen> {
       date: DateTime.now().subtract(const Duration(days: 1)),
       emotion: emotionalDictionary[0],
       isBookmarked: true,
+      isPrivate: false,
     ),
     JournalEntry(
       id: "2",
@@ -35,6 +40,7 @@ class _JournalState extends State<EchoJournalScreen> {
       content: "Fuori c'è pioggia e mi sento molto triste e stanco.",
       date: DateTime.now(),
       emotion: emotionalDictionary[2],
+      isPrivate: false
     ),
   ];
 
@@ -81,7 +87,18 @@ class _JournalState extends State<EchoJournalScreen> {
             _entries.removeWhere((e) => e.id == entry.id);
           });
         },
-        onTapEntry: (entry) => _navigateToEditor(context, entry),
+        //onTapEntry: (entry) => _navigateToEditor(context, entry),
+        
+        // Intercettiamo il tap per controllare se il diario è protetto da PIN
+        onTapEntry: (entry) {
+          _handleEntryTap(context, entry);
+        },
+        
+        // 🆕 Gestiamo l'attivazione/disattivazione della privacy richiesta dal body
+        onTogglePrivacy: (entry) {
+          _handleTogglePrivacy(context, entry);
+        },
+      
       ),
       
       
@@ -132,4 +149,67 @@ class _JournalState extends State<EchoJournalScreen> {
       ),
     );
   }
+
+  /// Gestisce l'apertura del diario: chiede il PIN se il diario è privato
+  void _handleEntryTap(BuildContext context, JournalEntry entry) {
+    if (entry.isPrivate && _appPin != null) {
+      PinManager.showVerificationDialog(
+        context: context,
+        title: 'Inserisci il PIN per sbloccare',
+        currentPin: _appPin,
+        onResult: (isCorrect) {
+          if (isCorrect) {
+            _navigateToEditor(context, entry);
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('PIN Errato! Accesso negato.')),
+            );
+          }
+        },
+      );
+    } else {
+      _navigateToEditor(context, entry);
+    }
+  }
+
+
+  /// 🆕 Gestisce l'attivazione/disattivazione dello stato "Privato"
+  void _handleTogglePrivacy(BuildContext context, JournalEntry entry) {
+    if (entry.isPrivate) {
+      // Se è già privato, chiede il PIN prima di poterlo rendere pubblico
+      PinManager.showVerificationDialog(
+        context: context,
+        title: 'Inserisci il PIN per rendere pubblico',
+        currentPin: _appPin,
+        onResult: (isCorrect) {
+          if (isCorrect) {
+            setState(() {
+              entry.isPrivate = false;
+            });
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('PIN Errato!')),
+            );
+          }
+        },
+      );
+    } else {
+      // Se si desidera renderlo privato...
+      if (_appPin == null) {
+        // ...e non è mai stato creato un PIN globale, avvia il dialog di creazione
+        PinManager.showCreationDialog(context, (nuovoPin) {
+          setState(() {
+            _appPin = nuovoPin;
+            entry.isPrivate = true;
+          });
+        });
+      } else {
+        // ...se il PIN esiste già, attiva direttamente la privacy sul diario
+        setState(() {
+          entry.isPrivate = true;
+        });
+      }
+    }
+  }
+
 }

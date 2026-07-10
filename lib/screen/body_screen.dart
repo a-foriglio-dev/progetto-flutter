@@ -3,14 +3,16 @@ import '../models/journal_entry.dart';
 
 /// Corpo della schermata principale: mostra la lista dei diari filtrata,
 /// oppure un messaggio se non ce ne sono da mostrare.
-/// E' StatelessWidget dato che non gestisce nessuno stato internamente, riceve tutto dall'esterno e si limita a disegnare e notificare eventi verso l'alto
 class EchoBody extends StatelessWidget {
   final List<JournalEntry> displayedEntries;
   final String activeFilter;
-  // Le tre callback che vengono da journal_screen.dart
+  
+  // Le callback che notificano gli eventi verso il widget padre
   final void Function(JournalEntry entry) onToggleBookmark;
   final void Function(JournalEntry entry) onDelete;
   final void Function(JournalEntry entry) onTapEntry;
+  // 🆕 AGGIUNTA QUESTA RIGA: serve a ricevere la funzione per la privacy
+  final void Function(JournalEntry entry) onTogglePrivacy;
 
   const EchoBody({
     super.key,
@@ -19,6 +21,7 @@ class EchoBody extends StatelessWidget {
     required this.onToggleBookmark,
     required this.onDelete,
     required this.onTapEntry,
+    required this.onTogglePrivacy, // 🆕 AGGIUNTA QUESTA RIGA
   });
 
   @override
@@ -34,16 +37,12 @@ class EchoBody extends StatelessWidget {
       );
     }
 
-    // ListView.builder costruisce una lista scorrevole in modo lazy
-    // Modo lazy: chiama itemBuilder solo per gli elementi effettivamente a schermo
-
     return ListView.builder(
       padding: const EdgeInsets.all(16.0),
       itemCount: displayedEntries.length,
       itemBuilder: (context, index) {
         final entry = displayedEntries[index];
         
-        // Card è un contenitore Material con ombra e bordi
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 8.0),
           shape: RoundedRectangleBorder(
@@ -58,8 +57,6 @@ class EchoBody extends StatelessWidget {
                 end: Alignment.bottomRight,
               ),
             ),
-            
-            // ListTile è un widget pensato per righe di lista con titolo, sottotitolo e widget accessori a sinistra/destra
             
             child: ListTile(
               contentPadding: const EdgeInsets.symmetric(
@@ -76,21 +73,25 @@ class EchoBody extends StatelessWidget {
               subtitle: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  entry.content,
-                  // maxLines: limita il contenuto del testo a una sola riga
+                  // 🆕 Nascondiamo l'anteprima del testo se il diario è privato
+                  entry.isPrivate 
+                      ? 'Contenuto protetto da PIN 🔒' 
+                      : entry.content,
                   maxLines: 1,
-                  // overflow: TextOverflow.ellipsis fa sì che se il testo è più lungo di quanto ci sta in una riga, venga tagliato e sostituito con ...
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: Colors.white.withOpacity(0.7)),
                 ),
               ),
               
-              // Trailing è lo spazio a destra del ListTile. 
-
               trailing: Row(
-                // mainAxisSize: MainAxisSize.min dice di occupare solo lo spazio necessario ai suoi figli invece di espandersi al massimo disponibile
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // 🆕 Mostra un lucchetto se il diario è privato
+                  if (entry.isPrivate)
+                    const Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(Icons.lock, color: Colors.white70, size: 20),
+                    ),
                   if (entry.isBookmarked)
                     const Icon(Icons.bookmark, color: Colors.amber),
                   PopupMenuButton<String>(
@@ -99,6 +100,9 @@ class EchoBody extends StatelessWidget {
                         onToggleBookmark(entry);
                       } else if (value == 'delete') {
                         onDelete(entry);
+                      } else if (value == 'privacy') {
+                        //  Attiva la callback quando l'utente preme sul menu
+                        onTogglePrivacy(entry);
                       }
                     },
                     itemBuilder: (BuildContext context) => [
@@ -108,6 +112,15 @@ class EchoBody extends StatelessWidget {
                           entry.isBookmarked
                               ? 'Rimuovi dai segnalibri'
                               : 'Aggiungi ai segnalibri',
+                        ),
+                      ),
+                      //  Nuova opzione nel menu a tendina
+                      PopupMenuItem(
+                        value: 'privacy',
+                        child: Text(
+                          entry.isPrivate
+                              ? 'Rendi pubblico'
+                              : 'Rendi privato',
                         ),
                       ),
                       const PopupMenuItem(
