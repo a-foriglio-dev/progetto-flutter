@@ -16,7 +16,7 @@ class EmotionalAnalysisResult {
 /// Analizza il testo per estrarre l'emozione prevalente e il mix cromatico di sfondo.
 /// Gestisce internamente anche il caso di testo vuoto (ritornando lo stato neutro).
 EmotionalAnalysisResult analyzeText(String text) {
-  // 1. Gestione del testo vuoto (Reset allo stato di Calma)
+  // Gestione del testo vuoto (Reset allo stato di Calma)
   if (text.trim().isEmpty) {
     return EmotionalAnalysisResult(
       dominantEmotion: emotionalDictionary[0],
@@ -82,8 +82,8 @@ EmotionalAnalysisResult analyzeText(String text) {
     );
   }
 
-  // 4. Se l'utente scrive parole neutre (non presenti nel dizionario), 
-  // ritorniamo comunque la calma come base (o lo stato di default)
+  // Se l'utente scrive parole neutre (non presenti nel dizionario), 
+  // ritorna comunque la calma come base (o lo stato di default)
   return EmotionalAnalysisResult(
     dominantEmotion: emotionalDictionary[0],
     mixedColors: List.from(emotionalDictionary[0].gradientColors),
