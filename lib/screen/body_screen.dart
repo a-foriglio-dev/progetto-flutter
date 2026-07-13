@@ -42,15 +42,15 @@ class EchoBody extends StatelessWidget {
       itemBuilder: (context, index) {
         final entry = displayedEntries[index];
         
-        // 🆕 METODO 1: Recuperiamo il colore principale della card per calcolare il contrasto
+        //  Recuperiamo il colore principale della card per calcolare il contrasto
         final Color cardPrimaryColor = entry.emotion.gradientColors.isNotEmpty 
             ? entry.emotion.gradientColors.first 
             : Colors.grey;
 
-        // 🆕 Determina se lo sfondo locale sotto le icone è chiaro o scuro
+        //  Determina se lo sfondo locale sotto le icone è chiaro o scuro
         final bool isDarkBackground = ThemeData.estimateBrightnessForColor(cardPrimaryColor) == Brightness.dark;
 
-        // 🆕 Colore dinamico armonizzato per le icone del segnalibro e del lucchetto
+        // Colore dinamico armonizzato per le icone del segnalibro e del lucchetto
         final Color dynamicIconColor = isDarkBackground 
             ? Colors.white.withOpacity(0.9)  // Bianco morbido su sfondi scuri (Ansia, Tristezza)
             : Colors.black.withOpacity(0.75); // Nero fumo su sfondi chiari (Gioia, Serenità)
