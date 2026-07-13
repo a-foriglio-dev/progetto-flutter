@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class PinManager {
   
-  /// Dialog per la creazione del PIN dedicato a un singolo diario.
+  /// Funzione per la creazione del PIN dedicato a un singolo diario.
   /// Ritorna semplicemente il valore tramite la callback onSuccess.
+  /// BuildContext context serve a Flutter per sapere dove mostrare il dialog
   static void showCreationDialog(BuildContext context, Function(String) onSuccess) {
-    final controller = TextEditingController();
+    final controller = TextEditingController(); // controlla il contenuto del testo
     
     showDialog(
       context: context,
@@ -17,11 +18,10 @@ class PinManager {
           keyboardType: TextInputType.number,
           obscureText: true,
           maxLength: 4,
+          /// onChanged viene eseguita ogni volta che cambia il testo
           onChanged: (value) {
             if (value.length == 4) {
-              Navigator.pop(context);
-              // Rimuoviamo il vecchio db_service.savePin(value) globale.
-              // Passiamo direttamente il PIN scelto alla schermata principale.
+              Navigator.pop(context); // toglie la finestra dallo schermo
               onSuccess(value);
             }
           },
@@ -40,7 +40,7 @@ class PinManager {
     );
   }
 
-  /// Dialog per la verifica del PIN specifico di un diario.
+  /// Funzione per la verifica del PIN specifico di un diario.
   static void showVerificationDialog({
     required BuildContext context,
     required String title,
@@ -65,9 +65,10 @@ class PinManager {
               onResult(value == currentPin);
             }
           },
+          // decoration: personalizza l'aspetto del campo di testo
           decoration: const InputDecoration(
             hintText: 'Inserisci il PIN del diario',
-            counterText: "",
+            counterText: "", // Nasconde il contatore dei caratteri
           ),
         ),
         actions: [
