@@ -43,30 +43,32 @@ class EchoBody extends StatelessWidget {
       itemBuilder: (context, index) {
         final entry = displayedEntries[index];
         
-        // Ricalcoliamo il mix di colori effettivo basandoci sul testo del diario
+        /// Ricalcola il mix di colori effettivo basandoci sul testo del diario
         final analysis = analyzeText(entry.content);
         final List<Color> cardColors = analysis.mixedColors;
 
-        // Recuperiamo il colore principale della card per calcolare il contrasto
+        /// Recupera il colore principale della card per calcolare il contrasto
         final Color cardPrimaryColor = cardColors.isNotEmpty 
             ? cardColors.first 
             : Colors.grey;
 
-        // Determina se lo sfondo locale sotto le icone è chiaro o scuro
+        /// Determina se lo sfondo locale sotto le icone è chiaro o scuro
         final bool isDarkBackground = ThemeData.estimateBrightnessForColor(cardPrimaryColor) == Brightness.dark;
 
-        // Colore dinamico armonizzato per le icone del segnalibro e del lucchetto
+        /// Colore dinamico armonizzato per le icone del segnalibro e del lucchetto
         final Color dynamicIconColor = isDarkBackground 
             ? Colors.white.withOpacity(0.9)  // Bianco morbido su sfondi scuri (Ansia, Tristezza)
             : Colors.black.withOpacity(0.75); // Nero fumo su sfondi chiari (Gioia, Serenità)
 
         return Card(
+          /// EdgeInsets per dare spazio tra le card
           margin: const EdgeInsets.symmetric(vertical: 8.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
           clipBehavior: Clip.antiAlias,
           child: Container(
+            // decoration: BoxDecoration applica lo sfondo emotivo
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: cardColors, // Applichiamo la lista dei colori mixati
@@ -85,12 +87,13 @@ class EchoBody extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
-                  // 🆕 RISOLTO: Colore del testo dinamico basato sul contrasto dello sfondo
+                 
                   color: isDarkBackground ? Colors.white : Colors.black,
                 ),
               ),
+              
               subtitle: Padding(
-                padding: const EdgeInsets.only(top: 8.0), // Ottimizzato il padding per evitare disallineamenti verticali
+                padding: const EdgeInsets.only(top: 8.0), /// Aggiunto 8 pixel sopra il testo
                 child: Text(
                   // Nascondiamo l'anteprima del testo se il diario è privato
                   entry.isPrivate 
@@ -103,7 +106,8 @@ class EchoBody extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
+              // Parte destra della card
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
