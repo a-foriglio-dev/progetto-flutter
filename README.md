@@ -8,11 +8,11 @@ L'applicazione analizza le parole digitate in tempo reale per adattare l'interfa
    
 ## ✨ Funzionalità Principali
 
-* **Analisi Empatica del Testo:** Lo sfondo e i gradienti delle schede cambiano colore dinamicamente in base alle emozioni rilevate nelle parole digitate.
-* **Gestione della Privacy ** Possibilità di rendere privati i singoli diari. Un diario privato nasconde l'anteprima del testo nella lista principale e richiede un PIN di 4 cifre per essere aperto o reso nuovamente pubblico.
-* **Filtri Avanzati:** Sistema di gestione dei Segnalibri (Bookmarks) per isolare rapidamente i diari preferiti tramite l'interfaccia nell'AppBar.
-* **Architettura Pulita:** Separazione netta delle responsabilità (UI, Modelli Dati, Logica di Business e Gestione dei Servizi).
-* **Lista Fluida:** Rendering ottimizzato e *lazy* tramite `ListView.builder` per prestazioni eccellenti anche con centinaia di diari.
+* Analisi Empatica del Testo: Lo sfondo e i gradienti delle schede cambiano colore dinamicamente in base alle emozioni rilevate nelle parole digitate.
+* Gestione della Privacy: Possibilità di rendere privati i singoli diari. Un diario privato nasconde l'anteprima del testo nella lista principale e richiede un PIN di 4 cifre per essere aperto o reso nuovamente pubblico.
+* Filtri Avanzati: Sistema di gestione dei Segnalibri (Bookmarks) per isolare rapidamente i diari preferiti tramite l'interfaccia nell'AppBar.
+* Architettura Pulita: Separazione netta delle responsabilità (UI, Modelli Dati, Logica di Business e Gestione dei Servizi).
+* Lista Fluida: Rendering ottimizzato e *lazy* tramite `ListView.builder` per prestazioni eccellenti anche con centinaia di diari.
 
 ---
 
@@ -22,11 +22,11 @@ L'applicazione utilizza una palette cromatica basata su gradienti sfumati per ri
 
 | Stato Emotivo | Sfumatura Gradiente (Colori) | Significato Visivo |
 | :--- | :--- | :--- |
-| **Serenità / Gioia** | `Colors.teal` ➡️ `Colors.greenAccent` | Rappresenta la calma, la pace e la felicità stabile. |
-| **Tristezza / Stanchezza** | `Colors.blueGrey` ➡️ `Colors.blue` | Riflette momenti difficili, malinconia o bassa energia. |
-| **Rabbia / Frustrazione** | `Colors.redAccent` ➡️ `Colors.orangeAccent` | Identifica picchi di stress, tensione o forte irritazione. |
-| **Ansia / Paura** | `Colors.deepPurple` ➡️ `Colors.indigo` | Associa le tonalità scure del viola alla preoccupazione e all'incertezza. |
-| **Neutro / Riflessivo** | `Colors.grey` ➡️ `Colors.blueGrey` | Utilizzato quando il testo non presenta picchi emotivi evidenti. |
+| Serenità / Gioia | `Colors.teal` ➡️ `Colors.greenAccent` | Rappresenta la calma, la pace e la felicità stabile. |
+| Tristezza / Stanchezza | `Colors.blueGrey` ➡️ `Colors.blue` | Riflette momenti difficili, malinconia o bassa energia. |
+| Rabbia / Frustrazione | `Colors.redAccent` ➡️ `Colors.orangeAccent` | Identifica picchi di stress, tensione o forte irritazione. |
+| Ansia / Paura | `Colors.deepPurple` ➡️ `Colors.indigo` | Associa le tonalità scure del viola alla preoccupazione e all'incertezza. |
+| Neutro / Riflessivo | `Colors.grey` ➡️ `Colors.blueGrey` | Utilizzato quando il testo non presenta picchi emotivi evidenti. |
 
 ---
 
