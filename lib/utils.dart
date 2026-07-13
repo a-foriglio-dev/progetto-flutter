@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'models/journal_entry.dart';
+//import 'models/journal_entry.dart';
 import 'config/emotional_dictionary.dart';
 
 /// Risultato completo dell'analisi emotiva da applicare alla UI

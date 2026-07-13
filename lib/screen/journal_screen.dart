@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/journal_entry.dart';
-import '../config/emotional_dictionary.dart';
+//import '../config/emotional_dictionary.dart';
 import '../services/db.dart' as db_service; // Importiamo il servizio DB
 import 'app_bar_screen.dart';
 import 'body_screen.dart';

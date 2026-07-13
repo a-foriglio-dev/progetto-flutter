@@ -44,7 +44,7 @@ class EchoBottomActions extends StatelessWidget {
         // 🆕 Ora utilizza correttamente addBtnBgColor, addBtnIconColor e cambia icona 
         // in un lucchetto aperto se l'utente si trova già nella sezione sicura.
         Padding(
-          padding: const EdgeInsets.only(right: 32.0), // Aggiunto padding destro per simmetria con il sinistro
+          padding: const EdgeInsets.only(right: 15.0), // Aggiunto padding destro per simmetria con il sinistro
           child: FloatingActionButton(
             heroTag: 'addBtn',
             backgroundColor: addBtnBgColor,
