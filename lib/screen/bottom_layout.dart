@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart'; // importa il pacchetto per riprodurre audio
 
-/// Layout dei pulsanti d'azione posizionati in basso: il tasto info
-/// (piccolo, a sinistra) e il tasto per aggiungere un nuovo diario
-/// (grande, a destra).
+
 class EchoBottomActions extends StatelessWidget {
+  /// VoidCallback: funzione senza parametri e senza valore di ritorno
   final VoidCallback onInfoPressed;
   final VoidCallback onAddPressed;
 
   static final AudioPlayer _audioPlayer = AudioPlayer();
   
-  /// 🆕 Cambiato da isFilterPrivate a isFilteringPrivate per combaciare perfettamente
-  /// con la chiamata effettuata in journal_screen.dart ed evitare errori di compilazione.
+  
   final bool isFilteringPrivate;
 
   const EchoBottomActions({
@@ -23,7 +21,7 @@ class EchoBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determiniamo il colore del tasto "+" in base allo stato del filtro di privacy
+    
     final Color addBtnBgColor = isFilteringPrivate ? Colors.amber.shade700 : Colors.white;
     final Color addBtnIconColor = isFilteringPrivate ? Colors.white : const Color(0xff134e5e);
 
@@ -44,8 +42,7 @@ class EchoBottomActions extends StatelessWidget {
         ),
         
         // Pulsante per aggiungere un nuovo diario (In basso a destra di default)
-        // 🆕 Ora utilizza correttamente addBtnBgColor, addBtnIconColor e cambia icona 
-        // in un lucchetto aperto se l'utente si trova già nella sezione sicura.
+      
         Padding(
           padding: const EdgeInsets.only(right: 15.0), // Aggiunto padding destro per simmetria con il sinistro
           child: FloatingActionButton(
