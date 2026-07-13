@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-=======
 import 'package:audioplayers/audioplayers.dart';
->>>>>>> 049b488 (suono aggiunto)
 
 /// Layout dei pulsanti d'azione posizionati in basso: il tasto info
 /// (piccolo, a sinistra) e il tasto per aggiungere un nuovo diario
@@ -10,11 +7,8 @@ import 'package:audioplayers/audioplayers.dart';
 class EchoBottomActions extends StatelessWidget {
   final VoidCallback onInfoPressed;
   final VoidCallback onAddPressed;
-<<<<<<< HEAD
-=======
 
   static final AudioPlayer _audioPlayer = AudioPlayer();
->>>>>>> 049b488 (suono aggiunto)
   
   /// 🆕 Cambiato da isFilterPrivate a isFilteringPrivate per combaciare perfettamente
   /// con la chiamata effettuata in journal_screen.dart ed evitare errori di compilazione.
@@ -58,14 +52,10 @@ class EchoBottomActions extends StatelessWidget {
             heroTag: 'addBtn',
             backgroundColor: addBtnBgColor,
             elevation: 4,
-<<<<<<< HEAD
-            onPressed: onAddPressed,
-=======
             onPressed: () {
               _audioPlayer.play(AssetSource('sounds/matthewvakaliuk73627-mouse-click-290204.mp3'));
               onAddPressed();
             },
->>>>>>> 049b488 (suono aggiunto)
             child: Icon(
               isFilteringPrivate ? Icons.lock_open_rounded : Icons.add, 
               color: addBtnIconColor,
