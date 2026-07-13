@@ -159,7 +159,7 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                           emotion: _currentState, // Salviamo l'emozione quantitativamente dominante
                           isBookmarked: widget.entry?.isBookmarked ?? false, // Preserva lo stato del segnalibro
                           isPrivate: widget.entry?.isPrivate ?? false,       // Preserva lo stato di privacy
-                          pin: widget.entry?.pin, // 🆕 CORREZIONE: Mantiene il PIN specifico del diario nel DB!
+                          pin: widget.entry?.pin, 
                         );
                         Navigator.pop(context, savedEntry);
                       },
