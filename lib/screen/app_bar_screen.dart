@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// StatelessWidget: lo stato non cambia internamente, riceve dati dall'esterno
+///                  i dati quando cambbiano viene ricostruita dal padre
+/// PreferredSizeWidget forza a creare Size getprefereedSize (Appbar deve comunicare la sua altezza a Flutter)
 class EchoAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool hasBookmarkedEntries;
-  final bool hasPrivateEntries; // <-- DEVE ESSERE QUI
+  final bool hasPrivateEntries;
   final ValueChanged<String> onFilterSelected;
 
   const EchoAppBar({
@@ -17,6 +20,7 @@ class EchoAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: Padding(
         padding: const EdgeInsets.only(left: 12.0),
+        // BoxFit.cover adatta l'immagine riempiendo lo spazio disponibile
         child: Image.asset('assets/immagini/logo.png', fit: BoxFit.cover),
       ),
       leadingWidth: 60,
@@ -41,6 +45,7 @@ class EchoAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
+  /// KToolbarHeight vale 56 pixel
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
