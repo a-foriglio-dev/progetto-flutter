@@ -22,9 +22,14 @@ class JournalEntry {
     this.pin,
   });
 
+<<<<<<< HEAD
   /// Crea una copia del diario modificando solo i campi passati come argomento.
   /// Fondamentale per aggiornare lo stato con SQLite senza perdere i dati esistenti.
   /// Utile se si vuole aggiornare un solo campo e lasciare gli altri invariati
+=======
+  /// 🆕 Crea una copia del diario modificando solo i campi passati come argomento.
+  /// Fondamentale per aggiornare lo stato con SQLite senza perdere i dati esistenti.
+>>>>>>> 049b488 (suono aggiunto)
   JournalEntry copyWith({
     String? id,
     String? title,
@@ -36,7 +41,10 @@ class JournalEntry {
     String? pin,
   }) {
     return JournalEntry(
+<<<<<<< HEAD
       // ?? se quello a sinistra è nullo usa quello a destra
+=======
+>>>>>>> 049b488 (suono aggiunto)
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
@@ -48,8 +56,12 @@ class JournalEntry {
     );
   }
 
+<<<<<<< HEAD
   // SQLite è un database comprende soli i tipi di dati primitivi.
   // Per questo serve questa funzione che converte l'oggetto in una mappa compatibile con SQLite
+=======
+  // Converte l'oggetto in una mappa compatibile con SQLite
+>>>>>>> 049b488 (suono aggiunto)
   Map<String, dynamic> toMap() => {
     'id': id,
     'title': title,
@@ -68,7 +80,10 @@ class JournalEntry {
       title: map['title'],
       content: map['content'],
       date: DateTime.parse(map['date']),
+<<<<<<< HEAD
       // firstWhere cerca nel dizionario delle emozioni 
+=======
+>>>>>>> 049b488 (suono aggiunto)
       emotion: emotionalDictionary.firstWhere(
         (e) => e.name == map['emotion_name'], 
         orElse: () => emotionalDictionary[0],

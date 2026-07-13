@@ -11,16 +11,40 @@ dependencies:
   sqflite: ^2.4.0
   path: ^1.9.0
   cupertino_icons: ^1.0.8
+<<<<<<< HEAD
+=======
+audioplayers: ^6.8.1
+  flutter_svg: ^2.0.10
+>>>>>>> 049b488 (suono aggiunto)
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+<<<<<<< HEAD
+=======
+  flutter_launcher_icons: ^0.14.3
+>>>>>>> 049b488 (suono aggiunto)
 
 
 flutter:
   uses-material-design: true
 
   assets:
+<<<<<<< HEAD
     - assets/logo.png
+=======
+    - assets/immagini/logo.png
+    - assets/sounds/matthewvakaliuk73627-mouse-click-290204.mp3
+
+  
+  
+flutter_launcher_icons:
+android: "launcher_icon"
+ios: true
+image_path: "assets/immagini/logo.png"
+min_sdk_version: 21
+adaptive_icon_background: "#ffffff"
+adaptive_icon_foreground: "assets/immagini/logo.png"  
+>>>>>>> 049b488 (suono aggiunto)

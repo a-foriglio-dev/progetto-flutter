@@ -17,7 +17,11 @@ class EchoAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: Padding(
         padding: const EdgeInsets.only(left: 12.0),
+<<<<<<< HEAD
         child: Image.asset('assets/logo.png', fit: BoxFit.cover),
+=======
+        child: Image.asset('assets/immagini/logo.png', fit: BoxFit.cover),
+>>>>>>> 049b488 (suono aggiunto)
       ),
       leadingWidth: 60,
       title: const Text('I miei Diari', style: TextStyle(fontWeight: FontWeight.w300)),
