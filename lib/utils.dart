@@ -40,7 +40,7 @@ EmotionalAnalysisResult analyzeText(String text) {
   String dominantEmotionName = emotionalDictionary[0].name;
   int maxCount = 0;
 
-  // 2. Conteggio delle parole emotive presenti nel testo
+  // Conteggio delle parole emotive presenti nel testo
   for (final word in words) {
     if (word.isEmpty) continue;
 
@@ -58,7 +58,7 @@ EmotionalAnalysisResult analyzeText(String text) {
     }
   }
 
-  // 3. Se sono state digitate parole emotive, creiamo il mix di colori
+  // Se sono state digitate parole emotive, viene creato il mix di colori
   if (totalEmotionalWords > 0) {
     List<Color> newMix = [];
 
