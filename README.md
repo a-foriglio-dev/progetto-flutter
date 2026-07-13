@@ -5,11 +5,11 @@
 L'applicazione analizza le parole digitate in tempo reale per adattare l'interfaccia allo stato d'animo del diario e permette di proteggere i pensieri più intimi attraverso un sistema di blocco tramite PIN.
 
 ---
-
+   
 ## ✨ Funzionalità Principali
 
 * **Analisi Empatica del Testo:** Lo sfondo e i gradienti delle schede cambiano colore dinamicamente in base alle emozioni rilevate nelle parole digitate.
-* **Gestione della Privacy (🔒 Nuova Feature):** Possibilità di rendere privati i singoli diari. Un diario privato nasconde l'anteprima del testo nella lista principale e richiede un PIN di 4 cifre per essere aperto o reso nuovamente pubblico.
+* **Gestione della Privacy ** Possibilità di rendere privati i singoli diari. Un diario privato nasconde l'anteprima del testo nella lista principale e richiede un PIN di 4 cifre per essere aperto o reso nuovamente pubblico.
 * **Filtri Avanzati:** Sistema di gestione dei Segnalibri (Bookmarks) per isolare rapidamente i diari preferiti tramite l'interfaccia nell'AppBar.
 * **Architettura Pulita:** Separazione netta delle responsabilità (UI, Modelli Dati, Logica di Business e Gestione dei Servizi).
 * **Lista Fluida:** Rendering ottimizzato e *lazy* tramite `ListView.builder` per prestazioni eccellenti anche con centinaia di diari.
