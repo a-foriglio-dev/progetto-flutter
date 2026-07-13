@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/journal_entry.dart';
+import '../utils.dart'; // 🆕 Importiamo le utility di analisi
 
 /// Corpo della schermata principale: mostra la lista dei diari filtrata,
 /// oppure un messaggio se non ce ne sono da mostrare.
@@ -42,12 +43,16 @@ class EchoBody extends StatelessWidget {
       itemBuilder: (context, index) {
         final entry = displayedEntries[index];
         
-        //  Recuperiamo il colore principale della card per calcolare il contrasto
-        final Color cardPrimaryColor = entry.emotion.gradientColors.isNotEmpty 
-            ? entry.emotion.gradientColors.first 
+        // 🆕 Ricalcoliamo il mix di colori effettivo basandoci sul testo del diario
+        final analysis = analyzeText(entry.content);
+        final List<Color> cardColors = analysis.mixedColors;
+
+        // Recuperiamo il colore principale della card per calcolare il contrasto
+        final Color cardPrimaryColor = cardColors.isNotEmpty 
+            ? cardColors.first 
             : Colors.grey;
 
-        //  Determina se lo sfondo locale sotto le icone è chiaro o scuro
+        // Determina se lo sfondo locale sotto le icone è chiaro o scuro
         final bool isDarkBackground = ThemeData.estimateBrightnessForColor(cardPrimaryColor) == Brightness.dark;
 
         // Colore dinamico armonizzato per le icone del segnalibro e del lucchetto
@@ -64,7 +69,7 @@ class EchoBody extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: entry.emotion.gradientColors,
+                colors: cardColors, // 🆕 Applichiamo la lista dei colori mixati
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -91,25 +96,24 @@ class EchoBody extends StatelessWidget {
                       : entry.content,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                  style: TextStyle(color: isDarkBackground ? Colors.white70 : Colors.black54), // 🆕 Testo leggibile in base al contrasto della card
                 ),
               ),
               
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // 🆕 Mostra il lucchetto adattato cromaticamente allo sfondo
+                  // Mostra il lucchetto adattato cromaticamente allo sfondo
                   if (entry.isPrivate)
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Icon(Icons.lock, color: dynamicIconColor, size: 20),
                     ),
-                  // 🆕 Mostra il segnalibro adattato cromaticamente allo sfondo
+                  // Mostra il segnalibro adattato cromaticamente allo sfondo
                   if (entry.isBookmarked)
                     Icon(Icons.bookmark, color: dynamicIconColor, size: 24),
                     
                   PopupMenuButton<String>(
-                    // Ingrandito leggermente il pulsante menu per equilibrarlo con le icone
                     iconColor: dynamicIconColor,
                     onSelected: (value) {
                       if (value == 'bookmark') {

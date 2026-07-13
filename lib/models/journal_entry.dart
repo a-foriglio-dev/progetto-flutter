@@ -20,7 +20,7 @@ class JournalEntry {
   final String title;
   final String content;
   final DateTime date;
-  final EmotionalState emotion;
+  final EmotionalState emotion; 
   bool isBookmarked;
   bool isPrivate;
 

@@ -3,7 +3,7 @@ import '../models/journal_entry.dart';
 import '../config/emotional_dictionary.dart';
 import '../utils.dart';
 
-/// Schermata di Scrittura Reattiva
+/// Schermata di Scrittura Reattiva con Mix di Colori Dinamico
 class EchoEditorScreen extends StatefulWidget {
   final JournalEntry? entry;
 
@@ -16,24 +16,31 @@ class EchoEditorScreen extends StatefulWidget {
 class _EchoEditorScreenState extends State<EchoEditorScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
-  late EmotionalState _currentState; // assegnata dopo in initState
+  
+  late EmotionalState _currentState; // Emozione prevalente attuale
+  late List<Color> _mixedGradientColors; // Lista dei colori dinamici per lo sfondo
 
-  // initState() viene eseguito una sola volta
   @override
   void initState() {
     super.initState();
-    // Diario già esistente
+    
+    // Se stiamo modificando un diario già esistente
     if (widget.entry != null) {
       _titleController.text = widget.entry!.title;
       _contentController.text = widget.entry!.content;
       _currentState = widget.entry!.emotion;
+      
+      // Eseguiamo un'analisi iniziale del testo esistente per ricreare il mix cromatico corretto
+      final initialResult = analyzeText(widget.entry!.content);
+      _mixedGradientColors = initialResult.mixedColors;
     } 
-
-    // Nuovo diario e parte con lo stato emotivo neutro
+    // Se è un nuovo diario, partiamo dallo stato neutro di default (Calma)
     else {
       _currentState = emotionalDictionary[0];
+      _mixedGradientColors = List.from(emotionalDictionary[0].gradientColors);
     }
-    // Ogni volta che il testo cambia Flutter chiama in automatico _handleTextChanged
+    
+    // Ascolta i cambiamenti del testo in tempo reale
     _contentController.addListener(_handleTextChanged);
   }
 
@@ -45,24 +52,19 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
     super.dispose();
   }
 
-  /// Reagisce alle modifiche del testo aggiornando lo stato emotivo.
-  /// La logica di riconoscimento delle parole chiave vive in utils.dart.
+  /// Reagisce alle modifiche del testo aggiornando l'emozione prevalente e il mix cromatico.
   void _handleTextChanged() {
     final text = _contentController.text;
 
-    if (text.isEmpty) {
-      if (_currentState != emotionalDictionary[0]) {
-        setState(() {
-          _currentState = emotionalDictionary[0];
-        });
-      }
-      return;
-    }
+    // Chiediamo a utils.dart l'analisi completa del testo (gestisce anche il testo vuoto internamente)
+    final result = analyzeText(text);
 
-    final detected = analyzeText(text);
-    if (detected != null && _currentState.name != detected.name) {
+    // Controlliamo se i colori o l'emozione dominante sono cambiati per evitare setState inutili
+    if (_currentState.name != result.dominantEmotion.name || 
+        _mixedGradientColors != result.mixedColors) {
       setState(() {
-        _currentState = detected;
+        _currentState = result.dominantEmotion;
+        _mixedGradientColors = result.mixedColors;
       });
     }
   }
@@ -70,21 +72,18 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AnimatedContainer anima automaticamente le transizioni ogni volta che una delle sue proprietà cambia. 
-      // In questo caso è il gradiente
-      
+      // AnimatedContainer si occupa di mixare i gradienti in modo fluido durante i cambi di stato
       body: AnimatedContainer(
-        duration: const Duration(seconds: 1),
+        duration: const Duration(milliseconds: 800), // Leggermente più veloce (800ms) per una risposta più reattiva al tocco
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: _currentState.gradientColors,
+            colors: _mixedGradientColors, // Usiamo la lista di colori mixati dinamicamente
           ),
         ),
         
-        // SafeArea evita che il contenuto venga coperto da elementi di sistema
         child: SafeArea(
           child: Column(
             children: [
@@ -97,13 +96,14 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                      // Navigator.pop(context) chiude la schermata 
                       onPressed: () => Navigator.pop(context),
                       child: const Text(
                         'Annulla',
                         style: TextStyle(color: Colors.white70, fontSize: 16),
                       ),
                     ),
+                    
+                    // Badge indicatore dello stato emotivo prevalente
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -114,21 +114,20 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        _currentState.name,
+                        _currentState.name.toUpperCase(),
                         style: const TextStyle(
+                          color: Colors.white,
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          letterSpacing: 1,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ),
+                    
                     TextButton(
                       onPressed: () {
                         if (_contentController.text.trim().isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            
-                            // SnackBar: messaggio temporaneo che appare in basso tramite ScaffoldMessenger.of(context)
-                            // .of(context) è comune in Flutter per accedere a un widget antenato nell'albero in questo caso lo Scaffold più vicino
                             const SnackBar(
                               content: Text(
                                 'Il contenuto del diario non può essere vuoto!',
@@ -137,18 +136,15 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                           );
                           return;
                         }
+                        
                         final savedEntry = JournalEntry(
-                          id:
-                              // ?: null-aware access, ??: se null allora
-                              // Se l'id esiste mantiene quello originale altrimenti ne viene generato uno nuovo
-                              widget.entry?.id ??
-                              DateTime.now().millisecondsSinceEpoch.toString(),
+                          id: widget.entry?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
                           title: _titleController.text.trim().isEmpty
                               ? "Diario senza titolo"
                               : _titleController.text.trim(),
                           content: _contentController.text,
                           date: widget.entry?.date ?? DateTime.now(),
-                          emotion: _currentState,
+                          emotion: _currentState, // Salviamo l'emozione quantitativamente dominante
                           isBookmarked: widget.entry?.isBookmarked ?? false,
                         );
                         Navigator.pop(context, savedEntry);
@@ -166,9 +162,8 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                 ),
               ),
               
-              // Divider è una linea sottile e quasi trasparente 
-              
               const Divider(color: Colors.white12, height: 1),
+              
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24.0,
@@ -179,6 +174,7 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                   decoration: const InputDecoration(
                     hintText: 'Titolo del giorno...',
@@ -187,8 +183,6 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                   ),
                 ),
               ),
-              
-              // Expanded: occupa tutto lo spazio verticale rimanente nella Column 
               
               Expanded(
                 child: Padding(
@@ -203,8 +197,7 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                       color: Colors.white,
                     ),
                     decoration: const InputDecoration(
-                      hintText:
-                          'Inizia a scrivere, l\'interfaccia ti ascolterà...',
+                      hintText: 'Inizia a scrivere, l\'interfaccia ti ascolterà...',
                       hintStyle: TextStyle(color: Colors.white30),
                       border: InputBorder.none,
                     ),
