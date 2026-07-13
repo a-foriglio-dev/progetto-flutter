@@ -1,23 +1,26 @@
-import 'package:path/path.dart';
+import 'package:path/path.dart'; // serve per costruire correttamente il percorso del file database
 import 'package:sqflite/sqflite.dart';
 import '../models/journal_entry.dart';
 
 // Inizializza e apre il database con gestione delle versioni
 Future<Database> openEchoDatabase() async {
+  // 1. await getDatabasesPath che trova la cartella dove Android/Ios conservano i database 
+  // 2. join(..., 'echo.db') crea il database
   return openDatabase(
-    join(await getDatabasesPath(), 'echo.db'),
-    version: 2, // 🆕 Aggiornato da 1 a 2 per forzare l'aggiornamento della struttura
+    join(await getDatabasesPath(), 'echo.db'), // ci viene in aiuto path
+    version: 2, 
+    // OnCreate viene eseguito solo la prima volta che l'app viene installata
     onCreate: (db, version) async {
-      // Creazione della tabella per i diari (ORA INCLUDE LA COLONNA PIN)
+      
       await db.execute(
         'CREATE TABLE entries(id TEXT PRIMARY KEY, title TEXT, content TEXT, date TEXT, emotion_name TEXT, is_bookmarked INTEGER, is_private INTEGER, pin TEXT)',
       );
-      // Creazione della tabella per le impostazioni dell'app (come il PIN)
+      
       await db.execute(
         'CREATE TABLE app_settings(key TEXT PRIMARY KEY, value TEXT)',
       );
     },
-    // 🆕 Gestisce il passaggio dei vecchi utenti dalla versione 1 alla versione 2 senza perdere i diari precedenti
+    // Gestisce il passaggio dei vecchi utenti dalla versione 1 alla versione 2 senza perdere i diari precedenti
     onUpgrade: (db, oldVersion, newVersion) async {
       if (oldVersion < 2) {
         // Aggiunge la colonna pin alla tabella entries esistente
@@ -30,6 +33,7 @@ Future<Database> openEchoDatabase() async {
 // Salva o aggiorna un diario
 Future<void> saveEntry(JournalEntry entry) async {
   final db = await openEchoDatabase();
+  // ConflictAlgorithm.replace: se esiste già non crea un duplicato ma sostituisce il vecchio
   await db.insert('entries', entry.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
 }
 
@@ -43,6 +47,7 @@ Future<List<JournalEntry>> loadEntries() async {
 // Elimina un diario
 Future<void> deleteEntry(String id) async {
   final db = await openEchoDatabase();
+  // ? per evitare SQL Injection
   await db.delete('entries', where: 'id = ?', whereArgs: [id]);
 }
 
@@ -75,7 +80,7 @@ Future<String?> loadPin() async {
   return null;
 }
 
-// ALIAS DI SICUREZZA: Mappa la richiesta di getPin() direttamente su loadPin()
+
 Future<String?> getPin() async {
   return await loadPin();
 }
