@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/journal_entry.dart';
-import '../utils.dart'; // 🆕 Importiamo le utility di analisi
+import '../utils.dart'; // Importiamo le utility di analisi
 
 /// Corpo della schermata principale: mostra la lista dei diari filtrata,
 /// oppure un messaggio se non ce ne sono da mostrare.
@@ -43,7 +43,7 @@ class EchoBody extends StatelessWidget {
       itemBuilder: (context, index) {
         final entry = displayedEntries[index];
         
-        // 🆕 Ricalcoliamo il mix di colori effettivo basandoci sul testo del diario
+        // Ricalcoliamo il mix di colori effettivo basandoci sul testo del diario
         final analysis = analyzeText(entry.content);
         final List<Color> cardColors = analysis.mixedColors;
 
@@ -69,7 +69,7 @@ class EchoBody extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: cardColors, // 🆕 Applichiamo la lista dei colori mixati
+                colors: cardColors, // Applichiamo la lista dei colori mixati
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -82,13 +82,15 @@ class EchoBody extends StatelessWidget {
               ),
               title: Text(
                 entry.title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
+                  // 🆕 RISOLTO: Colore del testo dinamico basato sul contrasto dello sfondo
+                  color: isDarkBackground ? Colors.white : Colors.black,
                 ),
               ),
               subtitle: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(top: 8.0), // Ottimizzato il padding per evitare disallineamenti verticali
                 child: Text(
                   // Nascondiamo l'anteprima del testo se il diario è privato
                   entry.isPrivate 
@@ -96,7 +98,9 @@ class EchoBody extends StatelessWidget {
                       : entry.content,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: isDarkBackground ? Colors.white70 : Colors.black54), // 🆕 Testo leggibile in base al contrasto della card
+                  style: TextStyle(
+                    color: isDarkBackground ? Colors.white70 : Colors.black54, // Testo leggibile in base al contrasto della card
+                  ),
                 ),
               ),
               

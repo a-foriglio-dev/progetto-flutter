@@ -6,15 +6,24 @@ import 'package:flutter/material.dart';
 class EchoBottomActions extends StatelessWidget {
   final VoidCallback onInfoPressed;
   final VoidCallback onAddPressed;
+  
+  /// 🆕 Cambiato da isFilterPrivate a isFilteringPrivate per combaciare perfettamente
+  /// con la chiamata effettuata in journal_screen.dart ed evitare errori di compilazione.
+  final bool isFilteringPrivate;
 
   const EchoBottomActions({
     super.key,
     required this.onInfoPressed,
     required this.onAddPressed,
+    this.isFilteringPrivate = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Determiniamo il colore del tasto "+" in base allo stato del filtro di privacy
+    final Color addBtnBgColor = isFilteringPrivate ? Colors.amber.shade700 : Colors.white;
+    final Color addBtnIconColor = isFilteringPrivate ? Colors.white : const Color(0xff134e5e);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -26,16 +35,26 @@ class EchoBottomActions extends StatelessWidget {
             mini: true, // Più piccolo per differenziarlo dal tasto di aggiunta
             backgroundColor: Colors.white.withOpacity(0.2),
             elevation: 0,
-            child: const Icon(Icons.info_outline, color: Colors.white),
             onPressed: onInfoPressed,
+            child: const Icon(Icons.info_outline, color: Colors.white),
           ),
         ),
+        
         // Pulsante per aggiungere un nuovo diario (In basso a destra di default)
-        FloatingActionButton(
-          heroTag: 'addBtn',
-          backgroundColor: Colors.white,
-          child: const Icon(Icons.add, color: Color(0xff134e5e)),
-          onPressed: onAddPressed,
+        // 🆕 Ora utilizza correttamente addBtnBgColor, addBtnIconColor e cambia icona 
+        // in un lucchetto aperto se l'utente si trova già nella sezione sicura.
+        Padding(
+          padding: const EdgeInsets.only(right: 32.0), // Aggiunto padding destro per simmetria con il sinistro
+          child: FloatingActionButton(
+            heroTag: 'addBtn',
+            backgroundColor: addBtnBgColor,
+            elevation: 4,
+            onPressed: onAddPressed,
+            child: Icon(
+              isFilteringPrivate ? Icons.lock_open_rounded : Icons.add, 
+              color: addBtnIconColor,
+            ),
+          ),
         ),
       ],
     );

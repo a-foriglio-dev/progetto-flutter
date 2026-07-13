@@ -3,7 +3,7 @@ import '../models/journal_entry.dart';
 import '../config/emotional_dictionary.dart';
 import '../utils.dart';
 
-/// Schermata di Scrittura Reattiva con Mix di Colori Dinamico
+/// Schermata di Scrittura Reattiva con Mix di Colori Dinamico e Persistenza Dati.
 class EchoEditorScreen extends StatefulWidget {
   final JournalEntry? entry;
 
@@ -56,7 +56,7 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
   void _handleTextChanged() {
     final text = _contentController.text;
 
-    // Chiediamo a utils.dart l'analisi completa del testo (gestisce anche il testo vuoto internamente)
+    // Chiediamo a utils.dart l'analisi completa del testo
     final result = analyzeText(text);
 
     // Controlliamo se i colori o l'emozione dominante sono cambiati per evitare setState inutili
@@ -71,10 +71,23 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Calcoliamo il contrasto dinamico basandoci sul colore principale dello sfondo corrente
+    final Color currentPrimaryColor = _mixedGradientColors.isNotEmpty 
+        ? _mixedGradientColors.first 
+        : Colors.grey;
+
+    final bool isDarkBackground = ThemeData.estimateBrightnessForColor(currentPrimaryColor) == Brightness.dark;
+
+    // Colori adattivi per i testi e le etichette dell'interfaccia
+    final Color inputTextColor = isDarkBackground ? Colors.white : Colors.black87;
+    final Color hintTextColor = isDarkBackground ? Colors.white38 : Colors.black38;
+    final Color actionButtonColor = isDarkBackground ? Colors.white70 : Colors.black54;
+    final Color saveButtonColor = isDarkBackground ? Colors.white : Colors.black;
+
     return Scaffold(
       // AnimatedContainer si occupa di mixare i gradienti in modo fluido durante i cambi di stato
       body: AnimatedContainer(
-        duration: const Duration(milliseconds: 800), // Leggermente più veloce (800ms) per una risposta più reattiva al tocco
+        duration: const Duration(milliseconds: 800), // Risposta fluida e reattiva al tocco
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -97,9 +110,9 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text(
+                      child: Text(
                         'Annulla',
-                        style: TextStyle(color: Colors.white70, fontSize: 16),
+                        style: TextStyle(color: actionButtonColor, fontSize: 16),
                       ),
                     ),
                     
@@ -110,13 +123,13 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: isDarkBackground ? Colors.white.withOpacity(0.15) : Colors.black.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         _currentState.name.toUpperCase(),
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: inputTextColor,
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 1.2,
@@ -129,14 +142,13 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                         if (_contentController.text.trim().isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text(
-                                'Il contenuto del diario non può essere vuoto!',
-                              ),
+                              content: Text('Il contenuto del diario non può essere vuoto!'),
                             ),
                           );
                           return;
                         }
                         
+                        // Costruiamo l'oggetto preservando tutti i campi, incluso il PIN
                         final savedEntry = JournalEntry(
                           id: widget.entry?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
                           title: _titleController.text.trim().isEmpty
@@ -145,14 +157,16 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                           content: _contentController.text,
                           date: widget.entry?.date ?? DateTime.now(),
                           emotion: _currentState, // Salviamo l'emozione quantitativamente dominante
-                          isBookmarked: widget.entry?.isBookmarked ?? false,
+                          isBookmarked: widget.entry?.isBookmarked ?? false, // Preserva lo stato del segnalibro
+                          isPrivate: widget.entry?.isPrivate ?? false,       // Preserva lo stato di privacy
+                          pin: widget.entry?.pin, // 🆕 CORREZIONE: Mantiene il PIN specifico del diario nel DB!
                         );
                         Navigator.pop(context, savedEntry);
                       },
-                      child: const Text(
+                      child: Text(
                         'Salva',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: saveButtonColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -162,7 +176,7 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                 ),
               ),
               
-              const Divider(color: Colors.white12, height: 1),
+              Divider(color: isDarkBackground ? Colors.white12 : Colors.black12, height: 1),
               
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -171,14 +185,14 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                 ),
                 child: TextField(
                   controller: _titleController,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: inputTextColor, // Contrasto dinamico sul titolo
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Titolo del giorno...',
-                    hintStyle: TextStyle(color: Colors.white38),
+                    hintStyle: TextStyle(color: hintTextColor),
                     border: InputBorder.none,
                   ),
                 ),
@@ -191,14 +205,14 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                     controller: _contentController,
                     maxLines: null,
                     keyboardType: TextInputType.multiline,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       height: 1.6,
-                      color: Colors.white,
+                      color: inputTextColor, // Contrasto dinamico sul testo principale
                     ),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Inizia a scrivere, l\'interfaccia ti ascolterà...',
-                      hintStyle: TextStyle(color: Colors.white30),
+                      hintStyle: TextStyle(color: hintTextColor),
                       border: InputBorder.none,
                     ),
                   ),

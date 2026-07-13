@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
-import '../models/journal_entry.dart';
+
+/// 🆕 La classe che mancava! Definisce la struttura di un'emozione.
+class EmotionalState {
+  final String name;
+  final List<String> keywords;
+  final List<Color> gradientColors;
+
+  const EmotionalState({
+    required this.name,
+    required this.keywords,
+    required this.gradientColors,
+  });
+}
 
 /// Configurazioni globali delle Emozioni (Dizionario delle 5 Emozioni)
 const List<EmotionalState> emotionalDictionary = [
