@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// 🆕 La classe che mancava! Definisce la struttura di un'emozione.
+/// EmotionalState definisce la struttura di un'emozione.
 class EmotionalState {
   final String name;
   final List<String> keywords;
