@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/journal_entry.dart';
 //import '../config/emotional_dictionary.dart';
-import '../services/db.dart' as db_service; // Importiamo il servizio DB
+import '../services/db.dart' as db_service; 
 import 'app_bar_screen.dart';
 import 'body_screen.dart';
 import 'bottom_layout.dart';
@@ -9,9 +9,11 @@ import 'editor_screen.dart';
 import '../manager/pin_manager.dart';
 
 /// Schermata Principale: Lista dei Diari caricati da SQLite con Filtri Avanzati.
+/// StatefulWidget: mantiene uno stato che cambia nel tempo
 class EchoJournalScreen extends StatefulWidget {
   const EchoJournalScreen({super.key});
 
+  // Collegamento della schermata al suo stato
   @override
   State<EchoJournalScreen> createState() => _JournalState();
 }
@@ -23,6 +25,7 @@ class _JournalState extends State<EchoJournalScreen> {
   // Stato del filtro attuale: 'all', 'bookmarked' o 'private'
   String _activeFilter = 'all';
 
+  /// initState() viene eseguito quando la pagina viene creata
   @override
   void initState() {
     super.initState();
@@ -54,6 +57,7 @@ class _JournalState extends State<EchoJournalScreen> {
     });
   }
 
+  // Ogni volta che lo stato cambia Flutter richiama build()
   @override
   Widget build(BuildContext context) {
     // Verifiche di coerenza per i filtri attivi basate sui dati del DB
@@ -79,6 +83,7 @@ class _JournalState extends State<EchoJournalScreen> {
         hasBookmarkedEntries: hasBookmarkedEntries,
         hasPrivateEntries: hasPrivateEntries, 
         onFilterSelected: (filter) {
+          // setState() cambia la lista
           setState(() {
             _activeFilter = filter;
           });
@@ -102,9 +107,11 @@ class _JournalState extends State<EchoJournalScreen> {
                   const SnackBar(content: Text('Diario eliminato con successo.')),
                 );
               },
+              /// Apertura Diario
               onTapEntry: (entry) {
                 _handleEntryTap(context, entry);
               },
+              /// Privacy Diario
               onTogglePrivacy: (entry) {
                 _handleTogglePrivacy(context, entry);
               },
@@ -121,8 +128,10 @@ class _JournalState extends State<EchoJournalScreen> {
   }
 
   void _navigateToEditor(BuildContext context, JournalEntry? entry) async {
+    /// Navigator.push apre una nuova pagina
     final result = await Navigator.push(
       context,
+      // MaterialPageRoute crea la nuova pagina
       MaterialPageRoute(builder: (context) => EchoEditorScreen(entry: entry)),
     );
 
@@ -136,6 +145,7 @@ class _JournalState extends State<EchoJournalScreen> {
         await _refreshEntries();
         // Cerchiamo il diario appena inserito per passarlo alla funzione del PIN
         final newEntry = _entries.firstWhere((e) => e.id == entryToSave.id, orElse: () => entryToSave);
+        /// Mounted serve per sapere se la schermata esiste ancora
         if (mounted) _forzaCreazionePinEProteggi(context, newEntry);
         return;
       }
@@ -210,7 +220,9 @@ class _JournalState extends State<EchoJournalScreen> {
       PinManager.showVerificationDialog(
         context: context,
         title: 'Inserisci il PIN per rendere pubblico il diario',
+        /// ! certezza che non sia null
         currentPin: entry.pin!,
+        /// isCorrect può essere true o false
         onResult: (isCorrect) async {
           if (isCorrect) {
             _rimuoviPrivacy(entry);
@@ -230,11 +242,13 @@ class _JournalState extends State<EchoJournalScreen> {
     }
   }
 
-  // --- Funzioni Helper Gestione Privacy Individuale ---
+
 
   void _forzaCreazionePinEProteggi(BuildContext context, JournalEntry entry) {
+    /// context serve per aprire il dialog PIN, mostrare SnackBar e interagire con la UI
     PinManager.showCreationDialog(context, (nuovoPin) async {
-      // Crea la copia inserendo il PIN appena digitato specificatamente per questo diario
+      /// Crea la copia inserendo il PIN appena digitato specificatamente per questo diario
+      /// copyWith crea un nuovo oggetto ed è più sicuro
       final updatedEntry = entry.copyWith(
         isPrivate: true,
         pin: nuovoPin, 
