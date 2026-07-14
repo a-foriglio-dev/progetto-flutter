@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// StatelessWidget: lo stato non cambia internamente, riceve dati dall'esterno
-///                  i dati quando cambbiano viene ricostruita dal padre
-/// PreferredSizeWidget forza a creare Size getprefereedSize (Appbar deve comunicare la sua altezza a Flutter)
+
+
 class EchoAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool hasBookmarkedEntries;
   final bool hasPrivateEntries;
