@@ -56,7 +56,7 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
   void _handleTextChanged() {
     final text = _contentController.text;
 
-    // Chiediamo a utils.dart l'analisi completa del testo
+    
     final result = analyzeText(text);
 
     // Controlliamo se i colori o l'emozione dominante sono cambiati per evitare setState inutili
