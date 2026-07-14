@@ -22,7 +22,7 @@ class JournalEntry {
     this.pin,
   });
 
-  /// 🆕 Crea una copia del diario modificando solo i campi passati come argomento.
+  ///  Crea una copia del diario modificando solo i campi passati come argomento.
   /// Fondamentale per aggiornare lo stato con SQLite senza perdere i dati esistenti.
   JournalEntry copyWith({
     String? id,
