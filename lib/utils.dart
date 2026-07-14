@@ -31,7 +31,6 @@ EmotionalAnalysisResult analyzeText(String text) {
       .replaceAll(RegExp(r'[.,\/#!$%\^&\*;:{}=\-_`~()?«»“”"’]'), ' ')
       .split(RegExp(r'\s+'));
 
-  // Mappa per contare quante parole appartengono a ciascuna emozione
   Map<String, int> emotionCounts = {
     for (var e in emotionalDictionary) e.name: 0
   };
@@ -40,7 +39,7 @@ EmotionalAnalysisResult analyzeText(String text) {
   String dominantEmotionName = emotionalDictionary[0].name;
   int maxCount = 0;
 
-  // Conteggio delle parole emotive presenti nel testo
+  
   for (final word in words) {
     if (word.isEmpty) continue;
 
