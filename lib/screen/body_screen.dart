@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/journal_entry.dart';
 import '../utils.dart'; // Importiamo le utility di analisi
 
-/// Corpo della schermata principale: mostra la lista dei diari filtrata,
-/// oppure un messaggio se non ce ne sono da mostrare.
+
 class EchoBody extends StatelessWidget {
   final List<JournalEntry> displayedEntries;
   final String activeFilter;
@@ -52,7 +51,7 @@ class EchoBody extends StatelessWidget {
             ? cardColors.first 
             : Colors.grey;
 
-        /// Determina se lo sfondo locale sotto le icone è chiaro o scuro
+        
         final bool isDarkBackground = ThemeData.estimateBrightnessForColor(cardPrimaryColor) == Brightness.dark;
 
         /// Colore dinamico armonizzato per le icone del segnalibro e del lucchetto
@@ -93,9 +92,9 @@ class EchoBody extends StatelessWidget {
               ),
               
               subtitle: Padding(
-                padding: const EdgeInsets.only(top: 8.0), /// Aggiunto 8 pixel sopra il testo
+                padding: const EdgeInsets.only(top: 8.0), 
                 child: Text(
-                  // Nascondiamo l'anteprima del testo se il diario è privato
+                  
                   entry.isPrivate 
                       ? 'Contenuto protetto da PIN 🔒' 
                       : entry.content,
@@ -107,17 +106,17 @@ class EchoBody extends StatelessWidget {
                 ),
               ),
 
-              // Parte destra della card
+              
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Mostra il lucchetto adattato cromaticamente allo sfondo
+                 
                   if (entry.isPrivate)
                     Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Icon(Icons.lock, color: dynamicIconColor, size: 20),
                     ),
-                  // Mostra il segnalibro adattato cromaticamente allo sfondo
+                  
                   if (entry.isBookmarked)
                     Icon(Icons.bookmark, color: dynamicIconColor, size: 24),
                     
