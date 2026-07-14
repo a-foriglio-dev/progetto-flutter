@@ -209,7 +209,7 @@ class _JournalState extends State<EchoJournalScreen> {
 
   void _handleTogglePrivacy(BuildContext context, JournalEntry entry) {
     if (entry.isPrivate) {
-      // Se è già privato ma non ha un PIN associato per errore, lo sblocchiamo
+      
       if (entry.pin == null || entry.pin!.trim().isEmpty) {
         _removePrivacy(entry);
         return;
@@ -221,7 +221,7 @@ class _JournalState extends State<EchoJournalScreen> {
         title: 'Inserisci il PIN per rendere pubblico il diario',
         /// ! certezza che non sia null
         currentPin: entry.pin!,
-        /// isCorrect può essere true o false
+        
         onResult: (isCorrect) async {
           if (isCorrect) {
             _removePrivacy(entry);
