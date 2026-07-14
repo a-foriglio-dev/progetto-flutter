@@ -93,7 +93,7 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft, // la sfumatura inizia nell'angolo in alto a sinistra dello schermo
             end: Alignment.bottomRight, // la sfumatura termina nell'angolo in basso a destra
-            colors: _mixedGradientColors, // Usiamo la lista di colori mixati dinamicamente
+            colors: _mixedGradientColors, 
           ),
         ),
         
@@ -129,8 +129,8 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                         ),
                         child: Text(
                           _currentState.name.toUpperCase(),
-                          maxLines: 1, // Impedisce al testo di andare a capo sformando il badge
-                          overflow: TextOverflow.ellipsis, // Se proprio non entra, mostra i tre puntini "..."
+                          maxLines: 1, 
+                          overflow: TextOverflow.ellipsis, 
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: inputTextColor,
@@ -193,7 +193,7 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: inputTextColor, // Contrasto dinamico sul titolo
+                    color: inputTextColor, 
                   ),
                   decoration: InputDecoration(
                     hintText: 'Titolo del giorno...',
@@ -213,7 +213,7 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                     style: TextStyle(
                       fontSize: 18,
                       height: 1.6,
-                      color: inputTextColor, // Contrasto dinamico sul testo principale
+                      color: inputTextColor, 
                     ),
                     decoration: InputDecoration(
                       hintText: 'Inizia a scrivere, l\'interfaccia ti ascolterà...',
