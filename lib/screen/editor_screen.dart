@@ -116,23 +116,28 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
                       ),
                     ),
                     
-                    // Badge indicatore dello stato emotivo prevalente
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isDarkBackground ? Colors.white.withOpacity(0.15) : Colors.black.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        _currentState.name.toUpperCase(),
-                        style: TextStyle(
-                          color: inputTextColor,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
+                    
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isDarkBackground ? Colors.white.withOpacity(0.15) : Colors.black.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          _currentState.name.toUpperCase(),
+                          maxLines: 1, // Impedisce al testo di andare a capo sformando il badge
+                          overflow: TextOverflow.ellipsis, // Se proprio non entra, mostra i tre puntini "..."
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: inputTextColor,
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
+                          ),
                         ),
                       ),
                     ),
