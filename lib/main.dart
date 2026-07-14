@@ -16,7 +16,7 @@ class EchoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Echo - Diario Emotivo',
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false, // Nasconde il nastro rosso con la scritta debug
       
       // Il tema globale viene ereditato da tutti i widget della UI
       theme: ThemeData(
