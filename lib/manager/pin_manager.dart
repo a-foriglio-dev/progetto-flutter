@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 class PinManager {
   
-  /// Funzione per la creazione del PIN dedicato a un singolo diario.
-  /// Ritorna semplicemente il valore tramite la callback onSuccess.
-  /// BuildContext context serve a Flutter per sapere dove mostrare il dialog
+ 
   static void showCreationDialog(BuildContext context, Function(String) onSuccess) {
     final controller = TextEditingController(); // controlla il contenuto del testo
     
