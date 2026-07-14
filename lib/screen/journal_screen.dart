@@ -60,11 +60,11 @@ class _JournalState extends State<EchoJournalScreen> {
   // Ogni volta che lo stato cambia Flutter richiama build()
   @override
   Widget build(BuildContext context) {
-    // Verifiche di coerenza per i filtri attivi basate sui dati del DB
+    
     bool hasBookmarkedEntries = _entries.any((entry) => entry.isBookmarked);
     bool hasPrivateEntries = _entries.any((entry) => entry.isPrivate);
 
-    // Se il filtro attuale non ha più elementi corrispondenti, resetta a 'all'
+
     if (_activeFilter == 'bookmarked' && !hasBookmarkedEntries) {
       _activeFilter = 'all';
     } else if (_activeFilter == 'private' && !hasPrivateEntries) {
@@ -74,7 +74,7 @@ class _JournalState extends State<EchoJournalScreen> {
     // Filtra la lista da mostrare in base alla scelta dell'utente
     List<JournalEntry> displayedEntries = _entries.where((entry) {
       if (_activeFilter == 'bookmarked') return entry.isBookmarked;
-      if (_activeFilter == 'private') return entry.isPrivate; // Filtro per la privacy
+      if (_activeFilter == 'private') return entry.isPrivate; 
       return true;
     }).toList();
 
@@ -120,7 +120,7 @@ class _JournalState extends State<EchoJournalScreen> {
       // Layout dei pulsanti d'azione posizionati in basso
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: EchoBottomActions(
-        isFilteringPrivate: _activeFilter == 'private', // Sincronizza lo stato del pulsante "+"
+        isFilteringPrivate: _activeFilter == 'private', 
         onInfoPressed: () => _showInfoDialog(context),
         onAddPressed: () => _navigateToEditor(context, null),
       ),
@@ -179,7 +179,7 @@ class _JournalState extends State<EchoJournalScreen> {
   /// Gestisce l'apertura del diario: chiede il PIN specifico memorizzato nel diario
   void _handleEntryTap(BuildContext context, JournalEntry entry) {
     if (entry.isPrivate) {
-      // Se il diario è segnato privato ma non ha un PIN valido, forziamo la creazione
+      
       if (entry.pin == null || entry.pin!.trim().isEmpty) {
         createPin(context, entry);
         return;
@@ -207,7 +207,6 @@ class _JournalState extends State<EchoJournalScreen> {
     }
   }
 
-  /// Gestisce l'attivazione/disattivazione dello stato "Privato" usando il PIN del diario
   void _handleTogglePrivacy(BuildContext context, JournalEntry entry) {
     if (entry.isPrivate) {
       // Se è già privato ma non ha un PIN associato per errore, lo sblocchiamo
@@ -265,7 +264,7 @@ class _JournalState extends State<EchoJournalScreen> {
   }
 
   void _removePrivacy(JournalEntry entry) async {
-    // Quando torna pubblico, azzera anche la proprietà del PIN impostandola a null
+    
     final updatedEntry = entry.copyWith(
       isPrivate: false,
       pin: null, 
