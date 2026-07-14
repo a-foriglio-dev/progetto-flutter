@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screen/journal_screen.dart'; // Rimosso lo slash iniziale per uniformità con le importazioni standard di Flutter
+import 'screen/journal_screen.dart'; 
 
 void main() {
   // Fissa l'inizializzazione dei binding nativi di Flutter.
