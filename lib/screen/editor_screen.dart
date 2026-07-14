@@ -87,12 +87,12 @@ class _EchoEditorScreenState extends State<EchoEditorScreen> {
     return Scaffold(
       // AnimatedContainer si occupa di mixare i gradienti in modo fluido durante i cambi di stato
       body: AnimatedContainer(
-        duration: const Duration(milliseconds: 800), // Risposta fluida e reattiva al tocco
+        duration: const Duration(milliseconds: 800), 
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topLeft, // la sfumatura inizia nell'angolo in alto a sinistra dello schermo
+            end: Alignment.bottomRight, // la sfumatura termina nell'angolo in basso a destra
             colors: _mixedGradientColors, // Usiamo la lista di colori mixati dinamicamente
           ),
         ),
