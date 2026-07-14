@@ -146,7 +146,7 @@ class _JournalState extends State<EchoJournalScreen> {
         // Cerchiamo il diario appena inserito per passarlo alla funzione del PIN
         final newEntry = _entries.firstWhere((e) => e.id == entryToSave.id, orElse: () => entryToSave);
         /// Mounted serve per sapere se la schermata esiste ancora
-        if (mounted) _forzaCreazionePinEProteggi(context, newEntry);
+        if (mounted) createPin(context, newEntry);
         return;
       }
 
@@ -181,7 +181,7 @@ class _JournalState extends State<EchoJournalScreen> {
     if (entry.isPrivate) {
       // Se il diario è segnato privato ma non ha un PIN valido, forziamo la creazione
       if (entry.pin == null || entry.pin!.trim().isEmpty) {
-        _forzaCreazionePinEProteggi(context, entry);
+        createPin(context, entry);
         return;
       }
 
@@ -212,7 +212,7 @@ class _JournalState extends State<EchoJournalScreen> {
     if (entry.isPrivate) {
       // Se è già privato ma non ha un PIN associato per errore, lo sblocchiamo
       if (entry.pin == null || entry.pin!.trim().isEmpty) {
-        _rimuoviPrivacy(entry);
+        _removePrivacy(entry);
         return;
       }
 
@@ -225,7 +225,7 @@ class _JournalState extends State<EchoJournalScreen> {
         /// isCorrect può essere true o false
         onResult: (isCorrect) async {
           if (isCorrect) {
-            _rimuoviPrivacy(entry);
+            _removePrivacy(entry);
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -238,13 +238,13 @@ class _JournalState extends State<EchoJournalScreen> {
       );
     } else {
       // Se il diario era pubblico, avvia la creazione del PIN dedicato per bloccarlo
-      _forzaCreazionePinEProteggi(context, entry);
+      createPin(context, entry);
     }
   }
 
 
 
-  void _forzaCreazionePinEProteggi(BuildContext context, JournalEntry entry) {
+  void createPin(BuildContext context, JournalEntry entry) {
     /// context serve per aprire il dialog PIN, mostrare SnackBar e interagire con la UI
     PinManager.showCreationDialog(context, (nuovoPin) async {
       /// Crea la copia inserendo il PIN appena digitato specificatamente per questo diario
@@ -264,7 +264,7 @@ class _JournalState extends State<EchoJournalScreen> {
     });
   }
 
-  void _rimuoviPrivacy(JournalEntry entry) async {
+  void _removePrivacy(JournalEntry entry) async {
     // Quando torna pubblico, azzera anche la proprietà del PIN impostandola a null
     final updatedEntry = entry.copyWith(
       isPrivate: false,
